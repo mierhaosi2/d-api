@@ -11,6 +11,12 @@ class Settings(BaseSettings):
     MYSQL_PASSWORD: str
     MYSQL_DB: str
 
+    # Spotify OAuth
+    SPOTIFY_CLIENT_ID: str
+    SPOTIFY_CLIENT_SECRET: str
+    SPOTIFY_REDIRECT_URI: str = "http://127.0.0.1:8080/callback"
+    SPOTIFY_REFRESH_TOKEN: str = ""
+
     @property
     def DATABASE_URI(self) -> str:
         return (
