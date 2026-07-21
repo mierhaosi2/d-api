@@ -19,6 +19,105 @@
 
 > 无需前端传 token，服务端自动管理认证。
 
+### GET `/spotify/auto/dashboard` ⭐ 推荐前端使用
+
+**聚合接口，一次返回所有首页数据，避免多请求触发限流。**
+
+**请求参数：**
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `top_limit` | integer | 否 | `20` | Top Tracks 数量，1~50 |
+| `top_range` | string | 否 | `medium_term` | `short_term` / `medium_term` / `long_term` |
+| `recent_limit` | integer | 否 | `6` | 最近播放数量，1~50 |
+
+**请求示例：**
+```
+GET /api/v1/spotify/auto/dashboard?top_limit=4&top_range=medium_term&recent_limit=6
+```
+
+**响应结构：**
+```json
+{
+  "me": {
+    "id": "312gpw2wmnsmjb6v5u4y45uglh2e",
+    "display_name": "mierhaosi2",
+    "email": "mierhaosi2@gmail.com",
+    "country": "EG",
+    "product": "premium",
+    "images": [
+      { "url": "https://i.scdn.co/image/xxx", "height": 300, "width": 300 },
+      { "url": "https://i.scdn.co/image/xxx", "height": 64, "width": 64 }
+    ],
+    "external_urls": { "spotify": "https://open.spotify.com/user/xxx" }
+  },
+  "playing": {
+    "is_playing": true,
+    "progress_ms": 75361,
+    "item": {
+      "id": "xxx",
+      "name": "歌曲名",
+      "duration_ms": 202835,
+      "artists": [{ "id": "xxx", "name": "艺术家名" }],
+      "album": {
+        "id": "xxx",
+        "name": "专辑名",
+        "images": [
+          { "url": "https://i.scdn.co/image/xxx", "height": 640, "width": 640 }
+        ]
+      },
+      "external_urls": { "spotify": "https://open.spotify.com/track/xxx" }
+    }
+  },
+  "top_tracks": {
+    "items": [
+      {
+        "id": "xxx",
+        "name": "歌曲名",
+        "duration_ms": 292906,
+        "artists": [{ "name": "mitsume" }],
+        "album": {
+          "name": "eye",
+          "images": [{ "url": "https://i.scdn.co/image/xxx", "height": 640, "width": 640 }]
+        },
+        "external_urls": { "spotify": "https://open.spotify.com/track/xxx" }
+      }
+    ],
+    "total": 47,
+    "limit": 4,
+    "offset": 0,
+    "next": "https://api.spotify.com/v1/me/top/tracks?offset=4&limit=4&time_range=medium_term"
+  },
+  "recently_played": {
+    "items": [
+      {
+        "track": {
+          "id": "xxx",
+          "name": "歌曲名",
+          "duration_ms": 236786,
+          "artists": [{ "name": "fox capture plan" }],
+          "album": {
+            "name": "Discovery",
+            "images": [{ "url": "https://i.scdn.co/image/xxx", "height": 640, "width": 640 }]
+          },
+          "external_urls": { "spotify": "https://open.spotify.com/track/xxx" }
+        },
+        "played_at": "2026-07-17T08:29:39.294Z"
+      }
+    ],
+    "next": "https://api.spotify.com/v1/me/player/recently-played?before=xxx&limit=6",
+    "cursors": { "after": "xxx", "before": "xxx" }
+  }
+}
+```
+
+**未播放时 playing 字段：**
+```json
+{ "playing": false, "item": null }
+```
+
+---
+
 ### GET `/spotify/auto/me`
 
 获取当前授权用户的 Spotify 个人信息。

@@ -8,6 +8,31 @@ router = APIRouter()
 
 # ── 自动 token 接口（无需手动传 access_token）──────────────────────────────
 
+@router.get("/auto/dashboard", summary="聚合接口：一次返回所有首页数据（推荐前端使用）")
+async def auto_dashboard(
+    top_limit: int = Query(20, ge=1, le=50, description="Top Tracks 数量"),
+    top_range: str = Query("medium_term", description="short_term / medium_term / long_term"),
+    recent_limit: int = Query(6, ge=1, le=50, description="最近播放数量"),
+):
+    """
+    按顺序请求 Spotify，避免并发触发限流。
+    返回 me / playing / top_tracks / recently_played 全部数据。
+    """
+    token = await spotify_svc.get_auto_access_token()
+
+    me = await spotify_svc.get_current_user(token)
+    playing = await spotify_svc.get_current_playing_cached(token)
+    top_tracks = await spotify_svc.get_top_tracks(token, top_range, top_limit)
+    recently_played = await spotify_svc.get_recently_played(token, recent_limit)
+
+    return {
+        "me": me,
+        "playing": playing or {"playing": False, "item": None},
+        "top_tracks": top_tracks,
+        "recently_played": recently_played,
+    }
+
+
 @router.get("/auto/me", summary="自动获取用户信息（用配置的 refresh_token）")
 async def auto_me():
     token = await spotify_svc.get_auto_access_token()
