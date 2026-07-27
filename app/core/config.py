@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     SPOTIFY_REDIRECT_URI: str = "http://127.0.0.1:8080/callback"
     SPOTIFY_REFRESH_TOKEN: str = ""
 
+    # Weather (Open-Meteo, 默认：深圳)
+    WEATHER_LAT: float = 22.5431
+    WEATHER_LON: float = 114.0579 
+
     @property
     def DATABASE_URI(self) -> str:
         return (

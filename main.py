@@ -43,3 +43,8 @@ async def spotify_callback_root(
         "token_type": token_data.get("token_type"),
         "scope": token_data.get("scope"),
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8080, reload=True)
